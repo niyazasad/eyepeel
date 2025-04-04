@@ -2,9 +2,102 @@
 <html>
 <head>
 <title>EyePeeL</title>
+<style>
+    .video-controls {
+        margin-top: 10px;
+        text-align: center;
+    }
+    .control-btn {
+        padding: 10px 20px;
+        margin: 0 5px;
+        cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+    }
+    .control-btn:hover {
+        background-color: #45a049;
+    }
+</style>
 </head>
 <body>
 <h1>This is a Heading</h1>
-<iframe src="//stream.crichd.sc/update/skys2.php" width="100%" height="500px" marginheight="0" marginwidth="0" scrolling="no" frameborder="0" allowfullscreen  allow="encrypted-media"></iframe>
+<div id="video-container">
+    <iframe 
+        id="videoFrame" 
+        src="//stream.crichd.sc/update/skys2.php" 
+        width="100%" 
+        height="500px" 
+        marginheight="0" 
+        marginwidth="0" 
+        scrolling="no" 
+        frameborder="0" 
+        allowfullscreen 
+        allow="encrypted-media">
+    </iframe>
+</div>
+
+<div class="video-controls">
+    <button class="control-btn" onclick="playVideo()">Play</button>
+    <button class="control-btn" onclick="pauseVideo()">Pause</button>
+    <button class="control-btn" onclick="stopVideo()">Stop</button>
+    <button class="control-btn" onclick="toggleFullscreen()">Fullscreen</button>
+</div>
+
+<script>
+    const iframe = document.getElementById('videoFrame');
+    let videoWindow;
+
+    // Try to get the window object of the iframe
+    try {
+        videoWindow = iframe.contentWindow;
+    } catch (e) {
+        console.log("Cannot access iframe content due to cross-origin restrictions");
+    }
+
+    function playVideo() {
+        if (videoWindow) {
+            try {
+                videoWindow.postMessage('play', '*');
+            } catch (e) {
+                console.log("Error playing video:", e);
+            }
+        }
+    }
+
+    function pauseVideo() {
+        if (videoWindow) {
+            try {
+                videoWindow.postMessage('pause', '*');
+            } catch (e) {
+                console.log("Error pausing video:", e);
+            }
+        }
+    }
+
+    function stopVideo() {
+        if (videoWindow) {
+            try {
+                videoWindow.postMessage('stop', '*');
+            } catch (e) {
+                console.log("Error stopping video:", e);
+            }
+        }
+    }
+
+    function toggleFullscreen() {
+        const container = document.getElementById('video-container');
+        if (!document.fullscreenElement) {
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+</script>
 </body>
 </html>
